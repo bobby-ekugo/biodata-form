@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Student Biodata Form</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Student Biodata Form</h1>
+  <p class="intro">Fill in your details. Fields marked are required.</p>
+
+  <form id="bio" method="get">
+    <fieldset>
+      <legend>Personal details</legend>
+      <div class="grid">
+        <div><label for="first">First name *</label><input id="first" name="first" required autocomplete="given-name"></div>
+        <div><label for="last">Last name *</label><input id="last" name="last" required autocomplete="family-name"></div>
+        <div><label for="dob">Date of birth *</label><input id="dob" name="dob" type="date" required></div>
+        <div>
+          <span class="label">Gender *</span>
+          <div class="radios">
+            <label><input type="radio" name="gender" value="Female" required> Female</label>
+            <label><input type="radio" name="gender" value="Male"> Male</label>
+          </div>
+        </div>
+        <div>
+          <label for="state">State of origin</label>
+          <select id="state" name="state"><option value="">Select state</option><option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option><option>Anambra</option><option>Bauchi</option><option>Bayelsa</option><option>Benue</option><option>Borno</option><option>Cross River</option><option>Delta</option><option>Ebonyi</option><option>Edo</option><option>Ekiti</option><option>Enugu</option><option>FCT (Abuja)</option><option>Gombe</option><option>Imo</option><option>Jigawa</option><option>Kaduna</option><option>Kano</option><option>Katsina</option><option>Kebbi</option><option>Kogi</option><option>Kwara</option><option>Lagos</option><option>Nasarawa</option><option>Niger</option><option>Ogun</option><option>Ondo</option><option>Osun</option><option>Oyo</option><option>Plateau</option><option>Rivers</option><option>Sokoto</option><option>Taraba</option><option>Yobe</option><option>Zamfara</option></select>
+        </div>
+        <div>
+          <label for="nation">Nationality</label>
+          <select id="nation" name="nation"><option value="">Select nationality</option><option>Nigerian</option><option>Beninese</option><option>Cameroonian</option><option>Chadian</option><option>Ghanaian</option><option>Ivorian</option><option>Kenyan</option><option>Senegalese</option><option>South African</option><option>Togolese</option><option>Other</option></select>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Contact</legend>
+      <div class="grid">
+        <div><label for="email">Email *</label><input id="email" name="email" type="email" required autocomplete="email"></div>
+        <div><label for="phone">Phone *</label><input id="phone" name="phone" type="tel" required autocomplete="tel"></div>
+        <div class="full"><label for="address">Home address</label><textarea id="address" name="address" autocomplete="street-address"></textarea></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Academic details</legend>
+      <div class="grid">
+        <div><label for="matric">Matric number *</label><input id="matric" name="matric" required></div>
+        <div><label for="level">Level *</label>
+          <select id="level" name="level" required>
+            <option value="">Select level</option>
+            <option>100</option><option>200</option><option>300</option><option>400</option><option>500</option>
+          </select>
+        </div>
+        <div>
+          <label for="faculty">Faculty *</label>
+          <select id="faculty" name="faculty" required>
+            <option value="">Select faculty</option>
+            <option>Natural and Applied Science</option>
+            <option>Computing</option>
+            <option>Social Sciences</option>
+            <option>Engineering</option>
+            <option>Law</option>
+            <option>Management Science</option>
+            <option>Medicine</option>
+          </select>
+        </div>
+        <div>
+          <label for="dept">Department *</label>
+          <select id="dept" name="dept" required>
+            <option value="">Select department</option>
+            <option>Software Engineering</option>
+            <option>Computer Science</option>
+            <option>Education Management</option>
+            <option>Computer Engineering</option>
+            <option>Law</option>
+            <option>Accounting</option>
+            <option>Mass Communication</option>
+            <option>Nursing</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="submit" class="primary">Save details</button>
+      <button type="reset" class="secondary">Clear form</button>
+    </div>
+  </form>
+</main>
+</body>
+</html>
