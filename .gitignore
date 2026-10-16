@@ -1,1 +1,29 @@
+# Secrets and environment files
+.env
+.env.*
+!.env.example
 
+# Dependencies
+node_modules/
+vendor/
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
