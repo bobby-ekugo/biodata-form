@@ -97,3 +97,8 @@ button {
   border-width: 1px;
   border: 1px solid #bebdbd;
 }
+.error-message { color: #b00020; font-size: .85rem; margin: .25rem 0 0; min-height: 0; }
+.invalid { border-color: #b00020; }
+.form-status { padding: .75rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
+.form-status[data-type="error"] { background: #fdecea; color: #b00020; }
+.form-status[data-type="success"] { background: #e8f5e9; color: #1b5e20; }
