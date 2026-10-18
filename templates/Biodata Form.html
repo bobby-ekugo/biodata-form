@@ -4,14 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Student Biodata Form</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <main>
   <h1>Student Biodata Form</h1>
   <p class="intro">Fill in your details. Fields marked are required.</p>
 
- <form id="bio" method="post" action="/api/students">
+  <!-- <form id="bio" method="get"> -->
+    <form id="bio" action="/save-biodata" method="POST">
     <fieldset>
       <legend>Personal details</legend>
       <div class="grid">
@@ -80,7 +81,6 @@
             <option>Accounting</option>
             <option>Mass Communication</option>
             <option>Nursing</option>
-            <option>Microbiology</option>
           </select>
         </div>
       </div>
@@ -92,6 +92,7 @@
     </div>
   </form>
 </main>
- <script src="script.js" defer></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
 </body>
 </html>
