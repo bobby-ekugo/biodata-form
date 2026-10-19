@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Saved – Student Biodata</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main>
+  <h1>Biodata Saved</h1>
+  <p>Thank you, <strong>{{ name }}</strong>. Your details have been saved successfully.</p>
+  <div class="actions" style="text-align:center; margin-top:2rem;">
+    <a href="{{ url_for('home') }}" class="button primary">Submit another</a>
+  </div>
+</main>
+</body>
+</html>
+

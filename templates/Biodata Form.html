@@ -11,28 +11,28 @@
   <h1>Student Biodata Form</h1>
   <p class="intro">Fill in your details. Fields marked are required.</p>
 
-  <!-- <form id="bio" method="get"> -->
-    <form id="bio" action="/save-biodata" method="POST">
+  <form id="bio" action="/save-biodata" method="POST">
+    {% if errors %}<div class="form-status" data-type="error"><ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
     <fieldset>
       <legend>Personal details</legend>
       <div class="grid">
-        <div><label for="first">First name *</label><input id="first" name="first" required autocomplete="given-name"></div>
-        <div><label for="last">Last name *</label><input id="last" name="last" required autocomplete="family-name"></div>
-        <div><label for="dob">Date of birth *</label><input id="dob" name="dob" type="date" required></div>
+        <div><label for="first">First name *</label><input id="first" name="first" required autocomplete="given-name" value="{{ form.first if form else '' }}"></div>
+        <div><label for="last">Last name *</label><input id="last" name="last" required autocomplete="family-name" value="{{ form.last if form else '' }}"></div>
+        <div><label for="dob">Date of birth *</label><input id="dob" name="dob" type="date" required value="{{ form.dob if form else '' }}"></div>
         <div>
           <span class="label">Gender *</span>
           <div class="radios">
-            <label><input type="radio" name="gender" value="Female" required> Female</label>
-            <label><input type="radio" name="gender" value="Male"> Male</label>
+            <label><input type="radio" name="gender" value="Female" required {% if form and form.gender == 'Female' %}checked{% endif %}> Female</label>
+            <label><input type="radio" name="gender" value="Male" {% if form and form.gender == 'Male' %}checked{% endif %}> Male</label>
           </div>
         </div>
         <div>
           <label for="state">State of origin</label>
-          <select id="state" name="state"><option value="">Select state</option><option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option><option>Anambra</option><option>Bauchi</option><option>Bayelsa</option><option>Benue</option><option>Borno</option><option>Cross River</option><option>Delta</option><option>Ebonyi</option><option>Edo</option><option>Ekiti</option><option>Enugu</option><option>FCT (Abuja)</option><option>Gombe</option><option>Imo</option><option>Jigawa</option><option>Kaduna</option><option>Kano</option><option>Katsina</option><option>Kebbi</option><option>Kogi</option><option>Kwara</option><option>Lagos</option><option>Nasarawa</option><option>Niger</option><option>Ogun</option><option>Ondo</option><option>Osun</option><option>Oyo</option><option>Plateau</option><option>Rivers</option><option>Sokoto</option><option>Taraba</option><option>Yobe</option><option>Zamfara</option></select>
+          <select id="state" name="state"><option value="">Select state</option><option {% if form and form.state == 'Abia' %}selected{% endif %}>Abia</option><option {% if form and form.state == 'Adamawa' %}selected{% endif %}>Adamawa</option><option {% if form and form.state == 'Akwa Ibom' %}selected{% endif %}>Akwa Ibom</option><option {% if form and form.state == 'Anambra' %}selected{% endif %}>Anambra</option><option {% if form and form.state == 'Bauchi' %}selected{% endif %}>Bauchi</option><option {% if form and form.state == 'Bayelsa' %}selected{% endif %}>Bayelsa</option><option {% if form and form.state == 'Benue' %}selected{% endif %}>Benue</option><option {% if form and form.state == 'Borno' %}selected{% endif %}>Borno</option><option {% if form and form.state == 'Cross River' %}selected{% endif %}>Cross River</option><option {% if form and form.state == 'Delta' %}selected{% endif %}>Delta</option><option {% if form and form.state == 'Ebonyi' %}selected{% endif %}>Ebonyi</option><option {% if form and form.state == 'Edo' %}selected{% endif %}>Edo</option><option {% if form and form.state == 'Ekiti' %}selected{% endif %}>Ekiti</option><option {% if form and form.state == 'Enugu' %}selected{% endif %}>Enugu</option><option {% if form and form.state == 'FCT (Abuja)' %}selected{% endif %}>FCT (Abuja)</option><option {% if form and form.state == 'Gombe' %}selected{% endif %}>Gombe</option><option {% if form and form.state == 'Imo' %}selected{% endif %}>Imo</option><option {% if form and form.state == 'Jigawa' %}selected{% endif %}>Jigawa</option><option {% if form and form.state == 'Kaduna' %}selected{% endif %}>Kaduna</option><option {% if form and form.state == 'Kano' %}selected{% endif %}>Kano</option><option {% if form and form.state == 'Katsina' %}selected{% endif %}>Katsina</option><option {% if form and form.state == 'Kebbi' %}selected{% endif %}>Kebbi</option><option {% if form and form.state == 'Kogi' %}selected{% endif %}>Kogi</option><option {% if form and form.state == 'Kwara' %}selected{% endif %}>Kwara</option><option {% if form and form.state == 'Lagos' %}selected{% endif %}>Lagos</option><option {% if form and form.state == 'Nasarawa' %}selected{% endif %}>Nasarawa</option><option {% if form and form.state == 'Niger' %}selected{% endif %}>Niger</option><option {% if form and form.state == 'Ogun' %}selected{% endif %}>Ogun</option><option {% if form and form.state == 'Ondo' %}selected{% endif %}>Ondo</option><option {% if form and form.state == 'Osun' %}selected{% endif %}>Osun</option><option {% if form and form.state == 'Oyo' %}selected{% endif %}>Oyo</option><option {% if form and form.state == 'Plateau' %}selected{% endif %}>Plateau</option><option {% if form and form.state == 'Rivers' %}selected{% endif %}>Rivers</option><option {% if form and form.state == 'Sokoto' %}selected{% endif %}>Sokoto</option><option {% if form and form.state == 'Taraba' %}selected{% endif %}>Taraba</option><option {% if form and form.state == 'Yobe' %}selected{% endif %}>Yobe</option><option {% if form and form.state == 'Zamfara' %}selected{% endif %}>Zamfara</option></select>
         </div>
         <div>
           <label for="nation">Nationality</label>
-          <select id="nation" name="nation"><option value="">Select nationality</option><option>Nigerian</option><option>Beninese</option><option>Cameroonian</option><option>Chadian</option><option>Ghanaian</option><option>Ivorian</option><option>Kenyan</option><option>Senegalese</option><option>South African</option><option>Togolese</option><option>Other</option></select>
+          <select id="nation" name="nation"><option value="">Select nationality</option><option {% if form and form.nation == 'Nigerian' %}selected{% endif %}>Nigerian</option><option {% if form and form.nation == 'Beninese' %}selected{% endif %}>Beninese</option><option {% if form and form.nation == 'Cameroonian' %}selected{% endif %}>Cameroonian</option><option {% if form and form.nation == 'Chadian' %}selected{% endif %}>Chadian</option><option {% if form and form.nation == 'Ghanaian' %}selected{% endif %}>Ghanaian</option><option {% if form and form.nation == 'Ivorian' %}selected{% endif %}>Ivorian</option><option {% if form and form.nation == 'Kenyan' %}selected{% endif %}>Kenyan</option><option {% if form and form.nation == 'Senegalese' %}selected{% endif %}>Senegalese</option><option {% if form and form.nation == 'South African' %}selected{% endif %}>South African</option><option {% if form and form.nation == 'Togolese' %}selected{% endif %}>Togolese</option><option {% if form and form.nation == 'Other' %}selected{% endif %}>Other</option></select>
         </div>
       </div>
     </fieldset>
@@ -40,47 +40,47 @@
     <fieldset>
       <legend>Contact</legend>
       <div class="grid">
-        <div><label for="email">Email *</label><input id="email" name="email" type="email" required autocomplete="email"></div>
-        <div><label for="phone">Phone *</label><input id="phone" name="phone" type="tel" required autocomplete="tel"></div>
-        <div class="full"><label for="address">Home address</label><textarea id="address" name="address" autocomplete="street-address"></textarea></div>
+        <div><label for="email">Email *</label><input id="email" name="email" type="email" required autocomplete="email" value="{{ form.email if form else '' }}"></div>
+        <div><label for="phone">Phone *</label><input id="phone" name="phone" type="tel" required autocomplete="tel" value="{{ form.phone if form else '' }}"></div>
+        <div class="full"><label for="address">Home address</label><textarea id="address" name="address" autocomplete="street-address">{{ form.address if form else '' }}</textarea></div>
       </div>
     </fieldset>
 
     <fieldset>
       <legend>Academic details</legend>
       <div class="grid">
-        <div><label for="matric">Matric number *</label><input id="matric" name="matric" required></div>
+        <div><label for="matric">Matric number *</label><input id="matric" name="matric" required value="{{ form.matric if form else '' }}"></div>
         <div><label for="level">Level *</label>
           <select id="level" name="level" required>
             <option value="">Select level</option>
-            <option>100</option><option>200</option><option>300</option><option>400</option><option>500</option>
+            <option {% if form and form.level == '100' %}selected{% endif %}>100</option><option {% if form and form.level == '200' %}selected{% endif %}>200</option><option {% if form and form.level == '300' %}selected{% endif %}>300</option><option {% if form and form.level == '400' %}selected{% endif %}>400</option><option {% if form and form.level == '500' %}selected{% endif %}>500</option>
           </select>
         </div>
         <div>
           <label for="faculty">Faculty *</label>
           <select id="faculty" name="faculty" required>
             <option value="">Select faculty</option>
-            <option>Natural and Applied Science</option>
-            <option>Computing</option>
-            <option>Social Sciences</option>
-            <option>Engineering</option>
-            <option>Law</option>
-            <option>Management Science</option>
-            <option>Medicine</option>
+            <option {% if form and form.faculty == 'Natural and Applied Science' %}selected{% endif %}>Natural and Applied Science</option>
+            <option {% if form and form.faculty == 'Computing' %}selected{% endif %}>Computing</option>
+            <option {% if form and form.faculty == 'Social Sciences' %}selected{% endif %}>Social Sciences</option>
+            <option {% if form and form.faculty == 'Engineering' %}selected{% endif %}>Engineering</option>
+            <option {% if form and form.faculty == 'Law' %}selected{% endif %}>Law</option>
+            <option {% if form and form.faculty == 'Management Science' %}selected{% endif %}>Management Science</option>
+            <option {% if form and form.faculty == 'Medicine' %}selected{% endif %}>Medicine</option>
           </select>
         </div>
         <div>
           <label for="dept">Department *</label>
           <select id="dept" name="dept" required>
             <option value="">Select department</option>
-            <option>Software Engineering</option>
-            <option>Computer Science</option>
-            <option>Education Management</option>
-            <option>Computer Engineering</option>
-            <option>Law</option>
-            <option>Accounting</option>
-            <option>Mass Communication</option>
-            <option>Nursing</option>
+            <option {% if form and form.dept == 'Software Engineering' %}selected{% endif %}>Software Engineering</option>
+            <option {% if form and form.dept == 'Computer Science' %}selected{% endif %}>Computer Science</option>
+            <option {% if form and form.dept == 'Education Management' %}selected{% endif %}>Education Management</option>
+            <option {% if form and form.dept == 'Computer Engineering' %}selected{% endif %}>Computer Engineering</option>
+            <option {% if form and form.dept == 'Law' %}selected{% endif %}>Law</option>
+            <option {% if form and form.dept == 'Accounting' %}selected{% endif %}>Accounting</option>
+            <option {% if form and form.dept == 'Mass Communication' %}selected{% endif %}>Mass Communication</option>
+            <option {% if form and form.dept == 'Nursing' %}selected{% endif %}>Nursing</option>
           </select>
         </div>
       </div>
