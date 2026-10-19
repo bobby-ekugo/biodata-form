@@ -127,10 +127,7 @@
     const controls = getControls(name);
     if (!controls.length) return null;
     const first = controls[0];
-    if (first.type === 'radio')    return first.closest('.radios') ?? first;
-    if (first.tagName === 'SELECT' || first.tagName === 'TEXTAREA') {
-      return first.closest('div') ?? first;
-    }
+    if (first.type === 'radio') return first.closest('.radios') ?? first;
     return first;
   }
 
@@ -259,7 +256,7 @@
       return;
     }
 
-    showStatus('Form validated successfully.', 'success');
+    form.submit();
   });
 
   form.addEventListener('reset', () => {
