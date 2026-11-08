@@ -8,10 +8,16 @@
 </head>
 <body>
 <main>
+  <nav class="account-nav" aria-label="Account">
+    <span>Signed in as {{ session.get('user_email') }}</span>
+    <form action="{{ url_for('logout') }}" method="POST">
+      <button type="submit" class="secondary">Log out</button>
+    </form>
+  </nav>
   <h1>Student Biodata Form</h1>
   <p class="intro">Fill in your details. Fields marked are required.</p>
 
-  <form id="bio" action="/save-biodata" method="POST">
+  <form id="bio" action="{{ url_for('save_biodata') }}" method="POST">
     {% if errors %}<div class="form-status" data-type="error"><ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
     <fieldset>
       <legend>Personal details</legend>

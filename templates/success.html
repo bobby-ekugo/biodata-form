@@ -8,6 +8,12 @@
 </head>
 <body>
 <main>
+  <nav class="account-nav" aria-label="Account">
+    <span>Signed in as {{ session.get('user_email') }}</span>
+    <form action="{{ url_for('logout') }}" method="POST">
+      <button type="submit" class="secondary">Log out</button>
+    </form>
+  </nav>
   <h1>Biodata Saved</h1>
   <p>Thank you, <strong>{{ name }}</strong>. Your details have been saved successfully.</p>
   <div class="actions" style="text-align:center; margin-top:2rem;">
@@ -16,4 +22,3 @@
 </main>
 </body>
 </html>
-

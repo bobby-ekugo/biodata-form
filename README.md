@@ -2,7 +2,7 @@
 
 Group 3 · VUA-SEN 305 Web Assignment
 
-A Flask + MySQL web form that collects, validates, and stores student biodata.
+A Flask + MySQL app with account registration and login, plus a form that collects, validates, and stores student biodata.
 
 ---
 
@@ -10,7 +10,7 @@ A Flask + MySQL web form that collects, validates, and stores student biodata.
 
 ```
 biodata-form/
-├── app.py                        # Flask application and server-side validation
+├── app.py                        # Flask routes, authentication, and server-side validation
 ├── README.md
 ├── .gitignore
 ├── static/
@@ -18,6 +18,8 @@ biodata-form/
 │   └── style.css                 # Styles (including error/status styles)
 └── templates/
     ├── Biodata Form.html         # Main form
+    ├── login.html                # Account login
+    ├── signup.html               # Account registration
     └── success.html              # Confirmation page shown after a successful save
 ```
 
@@ -49,6 +51,13 @@ CREATE DATABASE IF NOT EXISTS student_biodata
   CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE student_biodata;
+
+CREATE TABLE IF NOT EXISTS users (
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    email         VARCHAR(254) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TABLE IF NOT EXISTS students (
     id          INT AUTO_INCREMENT PRIMARY KEY,
@@ -90,12 +99,14 @@ To use different settings, set these environment variables before starting the a
 | `DB_USER` | `root` |
 | `DB_PASSWORD` | *(empty)* |
 | `DB_NAME` | `student_biodata` |
+| `SECRET_KEY` | *(random per app start if unset)* |
 
 PowerShell: `$env:DB_PASSWORD="yourpassword"`
 Command Prompt: `set DB_PASSWORD=yourpassword`
 macOS / Linux: `export DB_PASSWORD=yourpassword`
 
 The variables last only for that terminal session. Never commit a real password to the repository.
+For a stable signed-in session across app restarts, set `SECRET_KEY` to a long, random value. Keep it private.
 
 ---
 
@@ -105,7 +116,7 @@ The variables last only for that terminal session. Never commit a real password 
 python app.py
 ```
 
-Then open your browser at **http://127.0.0.1:5000**. Keep the terminal open while using the form.
+Then open your browser at **http://127.0.0.1:5000/login**. Sign up for an account first if you do not already have one. Keep the terminal open while using the app.
 
 > **Note:** `debug=False` is set in `app.py`. Change it to `True` only during local development. Never use debug mode on a production server, because it exposes an interactive traceback shell in the browser.
 
@@ -113,12 +124,16 @@ Then open your browser at **http://127.0.0.1:5000**. Keep the terminal open whil
 
 ## How it works
 
-1. The browser loads the form at `/`.
-2. `script.js` validates every field client-side on blur, input, and change, and blocks submission if any field is invalid.
-3. On a valid form, `form.submit()` sends a standard POST to `/save-biodata`.
-4. `app.py` re-validates all fields server-side, so direct POST requests that bypass the browser are also checked.
-5. On success the record is inserted and `success.html` is shown.
-6. On failure (validation error, duplicate matric number or email, or database error) the form is shown again with a list of error messages and the values the student already entered.
+1. A new user creates an account at `/signup`; existing users log in at `/login`.
+2. The app stores the email and a Werkzeug password hash in the MySQL `users` table. Plain-text passwords are never saved.
+3. After login, the browser loads the form at `/`.
+4. `script.js` validates every field client-side on blur, input, and change, and blocks submission if any field is invalid.
+5. On a valid form, `form.submit()` sends a standard POST to `/save-biodata`.
+6. `app.py` re-validates all fields server-side, so direct POST requests that bypass the browser are also checked. The form and save route require an authenticated session.
+7. On success the record is inserted and `success.html` is shown.
+8. On failure (validation error, duplicate matric number or email, or database error) the form is shown again with a list of error messages and the values the student already entered.
+
+Sign-up requires a valid email and a password between 8 and 128 characters. The form and save route redirect unauthenticated visitors to the login page. Use **Log out** to end the signed-in session.
 
 > **Known behaviour:** refreshing the success page re-sends the form, which then fails with an "already registered" message. Use the **Submit another** link instead.
 
@@ -176,6 +191,7 @@ This mapping exists in two places and must be kept in sync: `FACULTY_DEPARTMENTS
 | `ModuleNotFoundError: No module named 'flask'` | Packages were installed into a different Python. Run `python -m pip install Flask mysql-connector-python`. |
 | Cannot connect to MySQL (error 2003) | MySQL is not running. Start it in the XAMPP Control Panel. |
 | `Unknown database 'student_biodata'` | The database setup SQL has not been run. |
+| `Table 'student_biodata.users' doesn't exist` | Run the updated database setup SQL to create the account table. |
 | `Access denied for user 'root'` | Your MySQL root password is not empty. Set `DB_PASSWORD`. |
 | Page will not load at `http://127.0.0.1:5000` | The Flask app is not running, or the address is missing the `:5000` port. |
 | Department list is empty after choosing a faculty | The department option is missing from the HTML, or the names do not match the mapping. |

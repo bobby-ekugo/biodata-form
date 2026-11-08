@@ -1,11 +1,14 @@
 import os
 import re
 from datetime import date
-from flask import Flask, render_template, request
+from functools import wraps
+from flask import Flask, redirect, render_template, request, session, url_for
 import mysql.connector
 from mysql.connector import IntegrityError, Error as MySQLError
+from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY') or os.urandom(32)
 
 # ---------------------------------------------------------------------------
 # Validation helpers (mirrors front-end rules so direct POST attacks are caught)
@@ -138,15 +141,130 @@ def _connect():
     )
 
 
+def _login_required(view):
+    @wraps(view)
+    def wrapped_view(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect(url_for('login'))
+        return view(*args, **kwargs)
+
+    return wrapped_view
+
+
 # ---------------------------------------------------------------------------
 # Routes
 # ---------------------------------------------------------------------------
 @app.route('/')
+@_login_required
 def home():
     return render_template('Biodata Form.html')
 
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if 'user_id' in session:
+        return redirect(url_for('home'))
+
+    errors = []
+    email = ''
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip().lower()
+        password = request.form.get('password', '')
+        confirm_password = request.form.get('confirm_password', '')
+
+        if not email or not _EMAIL_RE.match(email) or len(email) > 254:
+            errors.append('Enter a valid email address.')
+        if len(password) < 8 or len(password) > 128:
+            errors.append('Password must be between 8 and 128 characters.')
+        if password != confirm_password:
+            errors.append('Passwords do not match.')
+
+        if not errors:
+            database = None
+            cursor = None
+            try:
+                database = _connect()
+                cursor = database.cursor()
+                cursor.execute(
+                    'INSERT INTO users (email, password_hash) VALUES (%s, %s)',
+                    (email, generate_password_hash(password)),
+                )
+                database.commit()
+                session.clear()
+                session['user_id'] = cursor.lastrowid
+                session['user_email'] = email
+                return redirect(url_for('home'))
+            except IntegrityError:
+                errors.append('That email address already has an account. Please log in.')
+                return render_template('signup.html', errors=errors, email=email), 409
+            except MySQLError as exc:
+                app.logger.error('Account registration database error: %s', exc)
+                errors.append('A database error occurred. Please try again later.')
+                return render_template('signup.html', errors=errors, email=email), 500
+            finally:
+                if cursor:
+                    cursor.close()
+                if database:
+                    database.close()
+
+    return render_template('signup.html', errors=errors, email=email)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if 'user_id' in session:
+        return redirect(url_for('home'))
+
+    errors = []
+    email = ''
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip().lower()
+        password = request.form.get('password', '')
+
+        if not email or not _EMAIL_RE.match(email) or len(email) > 254:
+            errors.append('Enter a valid email address.')
+        if not password:
+            errors.append('Password is required.')
+
+        if not errors:
+            database = None
+            cursor = None
+            try:
+                database = _connect()
+                cursor = database.cursor(dictionary=True)
+                cursor.execute(
+                    'SELECT id, password_hash FROM users WHERE email = %s',
+                    (email,),
+                )
+                user = cursor.fetchone()
+            except MySQLError as exc:
+                app.logger.error('Account login database error: %s', exc)
+                errors.append('A database error occurred. Please try again later.')
+                return render_template('login.html', errors=errors, email=email), 500
+            finally:
+                if cursor:
+                    cursor.close()
+                if database:
+                    database.close()
+
+            if user and check_password_hash(user['password_hash'], password):
+                session.clear()
+                session['user_id'] = user['id']
+                session['user_email'] = email
+                return redirect(url_for('home'))
+            errors.append('Email or password is incorrect.')
+
+    return render_template('login.html', errors=errors, email=email)
+
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
+
 @app.route('/save-biodata', methods=['POST'])
+@_login_required
 def save_biodata():
     data = request.form
 
